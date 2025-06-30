@@ -215,7 +215,7 @@ model = dict(
             pc_range=point_cloud_range))))
 
 dataset_type = 'CustomAV2OfflineLocalMapDataset'
-data_root = 'data/argoverse2/sensor/'
+data_root = 'data/argoverse2_geosplit/sensor/' # NOTE: use geosplit data
 file_client_args = dict(backend='disk')
 
 
