@@ -25,6 +25,9 @@ from shapely.geometry import Polygon, MultiPolygon, LineString, Point, box, Mult
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 import networkx as nx
+
+from nusc_geosplit import GEO_TRAIN_SCENES, GEO_VAL_SCENES
+
 sys.path.append('.')
 
 
@@ -758,7 +761,8 @@ def create_nuscenes_infos(root_path,
                           can_bus_root_path,
                           info_prefix,
                           version='v1.0-trainval',
-                          max_sweeps=10):
+                          max_sweeps=10,
+                          geosplit=False):
     """Create info file of nuscene dataset.
 
     Given the raw data, generate its related info file in pkl format.
@@ -799,6 +803,10 @@ def create_nuscenes_infos(root_path,
         val_scenes = splits.mini_val
     else:
         raise ValueError('unknown')
+
+    if geosplit:
+        train_scenes = GEO_TRAIN_SCENES
+        val_scenes = GEO_VAL_SCENES
 
     # filter existing scenes.
     available_scenes = get_available_scenes(nusc)
@@ -852,7 +860,8 @@ def nuscenes_data_prep(root_path,
                        version,
                        dataset_name,
                        out_dir,
-                       max_sweeps=10):
+                       max_sweeps=10,
+                       geosplit=False):
     """Prepare data related to nuScenes dataset.
 
     Related data consists of '.pkl' files recording basic infos,
@@ -867,7 +876,7 @@ def nuscenes_data_prep(root_path,
         max_sweeps (int): Number of input consecutive frames. Default: 10
     """
     create_nuscenes_infos(
-        root_path, out_dir, can_bus_root_path, info_prefix, version=version, max_sweeps=max_sweeps)
+        root_path, out_dir, can_bus_root_path, info_prefix, version=version, max_sweeps=max_sweeps, geosplit=geosplit)
 
     # if version == 'v1.0-test':
     #     info_test_path = osp.join(
@@ -920,6 +929,9 @@ parser.add_argument(
 parser.add_argument('--extra-tag', type=str, default='nuscenes')
 parser.add_argument(
     '--workers', type=int, default=4, help='number of threads to be used')
+parser.add_argument(
+    '--geosplit',
+    action='store_true')
 args = parser.parse_args()
 
 
@@ -932,7 +944,8 @@ if __name__ == '__main__':
         version=train_version,
         dataset_name='NuScenesDataset',
         out_dir=args.out_dir,
-        max_sweeps=args.max_sweeps)
+        max_sweeps=args.max_sweeps,
+        geosplit=args.geosplit)
     test_version = f'{args.version}-test'
     nuscenes_data_prep(
         root_path=args.root_path,
@@ -941,4 +954,5 @@ if __name__ == '__main__':
         version=test_version,
         dataset_name='NuScenesDataset',
         out_dir=args.out_dir,
-        max_sweeps=args.max_sweeps)
+        max_sweeps=args.max_sweeps,
+        geosplit=args.geosplit)
