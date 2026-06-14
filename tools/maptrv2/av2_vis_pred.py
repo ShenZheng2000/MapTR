@@ -48,7 +48,8 @@ COLOR_MAPS_BGR = {
     'drivable_area': (171, 255, 255)
 }
 
-data_path_prefix = '/home/users/yunchi.zhang/project/MapTR' # project root
+# data_path_prefix = '/home/users/yunchi.zhang/project/MapTR' # project root
+data_path_prefix = os.path.abspath('.')
 
 def remove_nan_values(uv):
     is_u_valid = np.logical_not(np.isnan(uv[:, 0]))

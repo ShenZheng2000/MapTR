@@ -112,7 +112,7 @@ class BaseTransform(BaseModule):
         # B x N x D x H x W x 3
         points = self.frustum - post_trans.view(B, N, 1, 1, 1, 3)
         points = (
-            torch.inverse(post_rots)
+            torch.inverse(post_rots.cpu()).to(post_rots.device)
             .view(B, N, 1, 1, 1, 3, 3)
             .matmul(points.unsqueeze(-1))
         )
@@ -124,13 +124,13 @@ class BaseTransform(BaseModule):
             ),
             5,
         )
-        combine = rots.matmul(torch.inverse(intrins))
+        combine = rots.matmul(torch.inverse(intrins.cpu()).to(intrins.device))
         points = combine.view(B, N, 1, 1, 1, 3, 3).matmul(points).squeeze(-1)
         points += trans.view(B, N, 1, 1, 1, 3)
         # ego_to_lidar
         points -= lidar2ego_trans.view(B, 1, 1, 1, 1, 3)
         points = (
-            torch.inverse(lidar2ego_rots)
+            torch.inverse(lidar2ego_rots.cpu()).to(lidar2ego_rots.device)
             .view(B, 1, 1, 1, 1, 3, 3)
             .matmul(points.unsqueeze(-1))
             .squeeze(-1)
@@ -397,19 +397,19 @@ class BaseTransformV2(BaseModule):
         # post-transformation
         # B x N x D x H x W x 3
         points = self.frustum.to(sensor2ego) - post_trans.view(B, N, 1, 1, 1, 3)
-        points = torch.inverse(post_rots).view(B, N, 1, 1, 1, 3, 3)\
+        points = torch.inverse(post_rots.cpu()).to(post_rots.device).view(B, N, 1, 1, 1, 3, 3)\
             .matmul(points.unsqueeze(-1))
 
         # cam_to_ego
         points = torch.cat(
             (points[..., :2, :] * points[..., 2:3, :], points[..., 2:3, :]), 5)
-        combine = rots.matmul(torch.inverse(intrins))
+        combine = rots.matmul(torch.inverse(intrins.cpu()).to(intrins.device))
         points = combine.view(B, N, 1, 1, 1, 3, 3).matmul(points).squeeze(-1)
         points += trans.view(B, N, 1, 1, 1, 3)
         # ego_to_lidar
         points -= lidar2ego_trans.view(B, 1, 1, 1, 1, 3)
         points = (
-            torch.inverse(lidar2ego_rots)
+            torch.inverse(lidar2ego_rots.cpu()).to(lidar2ego_rots.device)
             .view(B, 1, 1, 1, 1, 3, 3)
             .matmul(points.unsqueeze(-1))
             .squeeze(-1)
@@ -442,7 +442,7 @@ class BaseTransformV2(BaseModule):
         # B x N x D x H x W x 3
         points = self.frustum.to(device)- post_trans.view(B, N, 1, 1, 1, 3)
         points = (
-            torch.inverse(post_rots)
+            torch.inverse(post_rots.cpu()).to(post_rots.device)
             .view(B, N, 1, 1, 1, 3, 3)
             .matmul(points.unsqueeze(-1))
         )
@@ -454,13 +454,14 @@ class BaseTransformV2(BaseModule):
             ),
             5,
         )
-        combine = rots.matmul(torch.inverse(intrins))
+        # combine = rots.matmul(torch.inverse(intrins))
+        combine = rots.matmul(torch.inverse(intrins.cpu()).to(intrins.device))
         points = combine.view(B, N, 1, 1, 1, 3, 3).matmul(points).squeeze(-1)
         points += trans.view(B, N, 1, 1, 1, 3)
         # ego_to_lidar
         points -= lidar2ego_trans.view(B, 1, 1, 1, 1, 3)
         points = (
-            torch.inverse(lidar2ego_rots)
+            torch.inverse(lidar2ego_rots.cpu()).to(lidar2ego_rots.device)
             .view(B, 1, 1, 1, 1, 3, 3)
             .matmul(points.unsqueeze(-1))
             .squeeze(-1)

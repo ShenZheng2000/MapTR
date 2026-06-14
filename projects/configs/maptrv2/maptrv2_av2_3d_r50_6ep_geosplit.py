@@ -4,7 +4,7 @@ _base_ = [
 
 
 # NOTE: add data_root here and use it as pose_root
-data_root = 'data/argoverse2_geosplit/sensor/' # NOTE: change to geosplit data
+data_root = 'data/argoverse2_geosplit/' # NOTE: change to geosplit data
 
 data = dict(
     train=dict(
