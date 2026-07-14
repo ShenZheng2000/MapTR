@@ -8,19 +8,17 @@
 # python tools/maptrv2/custom_av2_map_converter.py --data-root ./data/argoverse2_geosplit/
 
 # train
-# bash ./tools/dist_train.sh \
-#     ./projects/configs/maptrv2/maptrv2_av2_3d_r50_6ep_geosplit.py \
-#     8 \
-#     --work-dir work_dirs/maptrv2_av2_3d_r50_6ep_geosplit
+# bash ./tools/dist_train.sh ./projects/configs/maptrv2/maptrv2_av2_3d_r50_6ep_geosplit.py 8
 
 # train (100m x 50m)
-bash ./tools/dist_train.sh \
-    ./projects/configs/maptrv2/maptrv2_av2_3d_r50_6ep_geosplit_100x50.py \
-    8 \
-    --work-dir work_dirs/maptrv2_av2_3d_r50_6ep_geosplit_100x50
+# bash ./tools/dist_train.sh ./projects/configs/maptrv2/maptrv2_av2_3d_r50_6ep_geosplit_100x50.py 8 
 
-# # # # => train maptrv2 on av2 geosplit (mobilnet backbone)
+# train (mobilenet backbone)
 # bash tools/dist_train.sh projects/configs/maptrv2/maptrv2_av2_3d_mobilenetv3_6ep_geosplit.py 8
+
+# train (mobilenet backbone; 100m x 50m)
+# bash tools/dist_train.sh projects/configs/maptrv2/maptrv2_av2_3d_mobilenetv3_6ep_geosplit_100x50.py 8
+
 
 # test
 # bash tools/dist_test_map.sh \
@@ -48,10 +46,19 @@ bash ./tools/dist_train.sh \
 # bash tools/dist_train.sh projects/configs/maptrv2/maptrv2_nusc_r50_24ep.py 8
 
 # train (100m x 50m)
-bash tools/dist_train.sh projects/configs/maptrv2/maptrv2_nusc_r50_24ep_100x50.py 8
+# bash tools/dist_train.sh projects/configs/maptrv2/maptrv2_nusc_r50_24ep_100x50.py 8
 
-# # # # => train maptrv2 on nuscenes geosplit (mobilnet backbone)
+# train (mobilenet backbone)
 # bash tools/dist_train.sh projects/configs/maptrv2/maptrv2_nusc_mobilenetv3_24ep.py 8
+
+# train (mobilenet backbone; 100m x 50m)
+# bash tools/dist_train.sh projects/configs/maptrv2/maptrv2_nusc_mobilenetv3_24ep_100x50.py 8
+
+# train (w/ centerline)
+# bash tools/dist_train.sh projects/configs/maptrv2/maptrv2_nusc_r50_24ep_w_centerline.py 8
+
+# train (mobilenet backbone w/ centerline)
+bash tools/dist_train.sh projects/configs/maptrv2/maptrv2_nusc_mobilenetv3_24ep_w_centerline.py 8
 
 
 # test 
