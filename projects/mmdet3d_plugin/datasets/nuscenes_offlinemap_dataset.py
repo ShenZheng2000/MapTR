@@ -1314,11 +1314,16 @@ class CustomNuScenesOfflineLocalMapDataset(CustomNuScenesDataset):
                 lidar2cam_rts.append(lidar2cam_rt_t)
 
                 # camera to ego transform
-                camera2ego = np.eye(4).astype(np.float32)
-                camera2ego[:3, :3] = Quaternion(
-                    cam_info["sensor2ego_rotation"]
-                ).rotation_matrix
-                camera2ego[:3, 3] = cam_info["sensor2ego_translation"]
+                if self.noise == 'None':
+                    camera2ego = np.eye(4).astype(np.float32)
+                    camera2ego[:3, :3] = Quaternion(
+                        cam_info["sensor2ego_rotation"]
+                    ).rotation_matrix
+                    camera2ego[:3, 3] = cam_info["sensor2ego_translation"]
+                else:
+                    # keep camera2ego consistent with the noised lidar2cam_rt_t above,
+                    # same derivation as av2_offlinemap_dataset.py's cam2ego_rts
+                    camera2ego = (lidar2ego @ np.linalg.inv(lidar2cam_rt_t)).astype(np.float32)
                 input_dict["camera2ego"].append(camera2ego)
 
                 # camego to global transform
